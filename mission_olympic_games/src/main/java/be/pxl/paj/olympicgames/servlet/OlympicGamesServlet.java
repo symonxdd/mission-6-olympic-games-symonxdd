@@ -1,6 +1,5 @@
 package be.pxl.paj.olympicgames.servlet;
 
-import be.pxl.paj.olympicgames.api.data.RaceDTO;
 import be.pxl.paj.olympicgames.api.data.RaceResultDTO;
 import be.pxl.paj.olympicgames.api.data.RaceResultsDTO;
 import be.pxl.paj.olympicgames.domain.ScoreStatus;
@@ -8,6 +7,8 @@ import be.pxl.paj.olympicgames.exception.NotFoundException;
 import be.pxl.paj.olympicgames.service.OlympicGamesService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,17 +21,16 @@ import java.io.PrintWriter;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @WebServlet("/RaceResults") // ?race=1
-public class RaceServlet extends HttpServlet implements ServletContextListener {
+public class OlympicGamesServlet extends HttpServlet {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
-    private static final Logger LOGGER = LogManager.getLogger(RaceServlet.class);
+    private static final Logger LOGGER = LogManager.getLogger(OlympicGamesServlet.class);
 
     private final OlympicGamesService olympicGamesService;
 
-    public RaceServlet(OlympicGamesService olympicGamesService) {
+    public OlympicGamesServlet(OlympicGamesService olympicGamesService) {
         this.olympicGamesService = olympicGamesService;
     }
 
@@ -79,13 +79,18 @@ public class RaceServlet extends HttpServlet implements ServletContextListener {
     }
 
     @Override
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
-        LOGGER.info("Initialize OlympicGamesServlet...");
+    public void init() throws ServletException {
+        super.init();
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Initialize OlympicGamesServlet...");
+        }
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        LOGGER.info("Destory OlympicGamesServlet...");
+    public void destroy() {
+        super.destroy();
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Destroy OlympicGamesServlet...");
+        }
     }
 }
-
